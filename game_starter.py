@@ -10,6 +10,7 @@ GAME_SPEED = 1/60
 
 MATTHEWSCALING = 0.2
 TILE_SCALING = 0.4
+FOOTBALL_SCALING = 0.05
 
 JUMPSPEED = 15
 MOVESPEED = 5
@@ -23,14 +24,14 @@ class YourGameClassRenameThis(arcade.Window):
         self.center_y = WINDOW_HEIGHT/2
         self.player_list = None
         self.wall_list = None
-        self.coin_list = None
+        self.football_list = None
         self.background = None
 
     def setup(self):
         """ Setup the game (or reset the game) """
         self.player_list = arcade.SpriteList()
         self.wall_list = arcade.SpriteList()
-        self.coin_list = arcade.SpriteList()
+        self.football_list = arcade.SpriteList()
         self.background = arcade.load_texture("images/Cowboys_Stadium.jpeg")
 
         self.player_sprite = arcade.Sprite("images/Zeke_Right.png", MATTHEWSCALING)
@@ -44,6 +45,12 @@ class YourGameClassRenameThis(arcade.Window):
             wall.center_y = 32
             self.wall_list.append(wall)
 
+        for x in range(128, 1250, 256):
+            football = arcade.Sprite("images/football.png", FOOTBALL_SCALING)
+            football.center_x = x
+            football.center_y = 200
+            self.football_list.append(football)
+
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
 
     def on_draw(self):
@@ -52,12 +59,18 @@ class YourGameClassRenameThis(arcade.Window):
         arcade.draw_texture_rectangle(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2, WINDOW_WIDTH, WINDOW_HEIGHT,
                                       self.background)
         self.wall_list.draw()
-        self.coin_list.draw()
+        self.football_list.draw()
         self.player_list.draw()
 
     def on_update(self, delta_time):
         """ Called every frame of the game (1/GAME_SPEED times per second)"""
         self.physics_engine.update()
+
+        football_hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.football_list)
+
+        for football in football_hit_list:
+            football.remove_from_sprite_lists()
+
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.UP or key == arcade.key.W:
