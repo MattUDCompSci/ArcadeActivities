@@ -3,14 +3,14 @@ import arcade
 
 # Define constants
 WINDOW_WIDTH = 1200
-WINDOW_HEIGHT = 500
+WINDOW_HEIGHT = 700
 BACKGROUND_COLOR = arcade.color.BLACK
 GAME_TITLE = "Feed Zeke"
 GAME_SPEED = 1/60
 
-MATTHEWSCALING = 0.2
+ZEKESCALING = 0.15
 TILE_SCALING = 0.4
-FOOTBALL_SCALING = 0.05
+FOOTBALL_SCALING = 0.4
 
 JUMPSPEED = 30
 MOVESPEED = 5
@@ -27,7 +27,7 @@ class YourGameClassRenameThis(arcade.Window):
         self.football_list = None
         self.background = None
         self.score = None
-
+        self.level = None
 
     def setup(self):
         """ Setup the game (or reset the game) """
@@ -36,26 +36,14 @@ class YourGameClassRenameThis(arcade.Window):
         self.football_list = arcade.SpriteList()
         self.background = arcade.load_texture("images/Cowboys_Stadium.jpeg")
         self.score = 0
+        self.level = 1
 
-        self.player_sprite = arcade.Sprite("images/Zeke_Right.png", MATTHEWSCALING)
+        self.player_sprite = arcade.Sprite("images/Zeke_Right.png", ZEKESCALING)
         self.player_sprite.center_x = 64
         self.player_sprite.center_y = 150
         self.player_list.append(self.player_sprite)
 
-        map_name = "map.tmx"
-        # Name of the layer in the file that has our platforms/walls
-        platforms_layer_name = 'Platforms'
-        # Name of the layer that has items for pick-up
-        coins_layer_name = 'Football'
-
-        # Read in the tiled map
-        my_map = arcade.tilemap.read_tmx(map_name)
-
-        # -- Platforms
-        self.wall_list = arcade.tilemap.process_layer(my_map, platforms_layer_name, TILE_SCALING)
-
-        # -- Coins
-        self.football_list = arcade.tilemap.process_layer(my_map, coins_layer_name, TILE_SCALING)
+        self.level_updater()
 
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
 
@@ -68,7 +56,7 @@ class YourGameClassRenameThis(arcade.Window):
         self.football_list.draw()
         self.player_list.draw()
         output = f"Score: {self.score}"
-        arcade.draw_text(output, 10, 70, arcade.color.WHITE, 13)
+        arcade.draw_text(output, 10, 70, arcade.color.WHITE, 20)
 
     def on_update(self, delta_time):
         """ Called every frame of the game (1/GAME_SPEED times per second)"""
@@ -80,6 +68,11 @@ class YourGameClassRenameThis(arcade.Window):
             football.remove_from_sprite_lists()
             self.score += 1
 
+        if self.player_sprite.center_x >= WINDOW_WIDTH:
+            self.level += 1
+            self.level_updater()
+            self.player_sprite.center_x = 64
+            self.player_sprite.center_y = 150
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.UP or key == arcade.key.W:
@@ -96,7 +89,15 @@ class YourGameClassRenameThis(arcade.Window):
         elif key == arcade.key.RIGHT or key == arcade.key.D:
             self.player_sprite.change_x = 0
 
+    def level_updater(self):
+        map_name = f"map_level_{self.level}.tmx"
+        platforms_layer_name = 'Platforms'
+        footballs_layer_name = 'Football'
 
+        my_map = arcade.tilemap.read_tmx(map_name)
+
+        self.wall_list = arcade.tilemap.process_layer(my_map, platforms_layer_name, TILE_SCALING)
+        self.football_list = arcade.tilemap.process_layer(my_map, footballs_layer_name, TILE_SCALING)
 
 def main():
     window = YourGameClassRenameThis()
