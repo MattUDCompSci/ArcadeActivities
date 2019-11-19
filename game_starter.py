@@ -98,6 +98,10 @@ class YourGameClassRenameThis(arcade.Window):
 
         self.wall_list = arcade.tilemap.process_layer(my_map, platforms_layer_name, TILE_SCALING)
         self.football_list = arcade.tilemap.process_layer(my_map, footballs_layer_name, TILE_SCALING)
+        self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
+
+        if self.level%3 == 0:
+            self.background = arcade.load_texture("images/ada.png")
 
 def main():
     window = YourGameClassRenameThis()
