@@ -12,6 +12,9 @@ ZEKESCALING = 0.15
 TILE_SCALING = 0.4
 FOOTBALL_SCALING = 0.4
 
+ZEKERIGHT = arcade.load_texture("images/Zeke_Right.png", mirrored = False, scale = ZEKESCALING)
+ZEKELEFT = arcade.load_texture("images/Zeke_Right.png", mirrored = True, scale = ZEKESCALING)
+
 JUMPSPEED = 30
 MOVESPEED = 5
 GRAVITY = 1
@@ -19,25 +22,6 @@ GRAVITY = 1
 STARTSCREEN = 0
 CONTROLSSCREEN = 1
 GAME_RUNNING = 2
-
-'''class IntroductionScreens(arcade.Sprite):
-    def __init__(self):
-        """ Initialize variables """
-        super().__init__(WINDOW_WIDTH, WINDOW_HEIGHT, GAME_TITLE)
-        self.texture = STARTSCREEN
-
-    def setup(self):
-        arcade.set_background_color(arcade.color.BLACK)
-
-    def on_draw(self):
-        arcade.start_render()
-        self.texture.draw()
-
-    def on_mouse_press(self, x, y, button, modifiers):
-        if self.texture == STARTSCREEN:
-            self.texture == INTRODUCTIONSCREEN
-        elif self.texture == INTRODUCTIONSCREEN:
-            game = FeedZeke()'''
 
 class FeedZeke(arcade.Window):
     def __init__(self):
@@ -69,7 +53,7 @@ class FeedZeke(arcade.Window):
         self.score = 0
         self.level = 1
 
-        self.player_sprite = arcade.Sprite("images/Zeke_Right.png", ZEKESCALING)
+        self.player_sprite = Zeke_Player()
         self.player_sprite.center_x = 64
         self.player_sprite.center_y = 150
         self.player_list.append(self.player_sprite)
@@ -115,6 +99,7 @@ class FeedZeke(arcade.Window):
 
     def on_update(self, delta_time):
         """ Called every frame of the game (1/GAME_SPEED times per second)"""
+        self.player_list.update()
         if self.current_state == GAME_RUNNING:
             self.physics_engine.update()
 
@@ -139,6 +124,7 @@ class FeedZeke(arcade.Window):
         elif key == arcade.key.RIGHT or key == arcade.key.D:
             self.player_sprite.change_x = MOVESPEED
 
+
     def on_key_release(self, key, modifiers):
         if key == arcade.key.LEFT or key == arcade.key.A:
             self.player_sprite.change_x = 0
@@ -160,6 +146,32 @@ class FeedZeke(arcade.Window):
             self.background = arcade.load_texture("images/Cowboys_Office.jpeg")
         else:
             self.background = arcade.load_texture("images/Cowboys_Stadium.jpeg")
+
+class Zeke_Player(arcade.Sprite):
+
+    def __init__(self):
+        super().__init__()
+        self.textures.append(ZEKELEFT)
+        self.textures.append(ZEKERIGHT)
+        self.set_texture(1)
+
+    def update(self):
+
+        if self.change_x > 0:
+            self.set_texture(1)
+        elif self.change_x < 0:
+            self.set_texture(0)
+
+        if self.left < 0:
+            self.left = 0
+        elif self.right > WINDOW_WIDTH - 1:
+            self.right = WINDOW_WIDTH - 1
+
+        if self.bottom < 0:
+            self.bottom = 0
+        elif self.top > WINDOW_HEIGHT - 1:
+            self.top = WINDOW_HEIGHT - 1
+
 
 def main():
     window = FeedZeke()
