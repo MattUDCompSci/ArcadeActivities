@@ -8,7 +8,7 @@ BACKGROUND_COLOR = arcade.color.BLACK
 GAME_TITLE = "Feed Zeke"
 GAME_SPEED = 1/80
 
-ZEKE_SCALING = 0.15
+ZEKE_SCALING = 0.125
 TILE_SCALING = 0.4
 FOOTBALL_SCALING = 0.4
 ZEKE_TACKLED = 0
@@ -57,7 +57,7 @@ class FeedZeke(arcade.Window):
         self.background = arcade.load_texture("images/Cowboys_Stadium.jpeg")
         self.score = 0
         self.level = 1
-        self.jump = 15
+        self.jump = 18
         self.tackled = False
 
         self.player_sprite = Zeke_Player()
@@ -157,7 +157,7 @@ class FeedZeke(arcade.Window):
             my_map = arcade.tilemap.read_tmx(map_name)
 
             self.wall_list = arcade.tilemap.process_layer(my_map, platforms_layer_name, TILE_SCALING)
-            self.football_list = arcade.tilemap.process_layer(my_map, footballs_layer_name, TILE_SCALING)
+            self.football_list = arcade.tilemap.process_layer(my_map, footballs_layer_name, FOOTBALL_SCALING)
             self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
 
             if self.level%3 == 0:
