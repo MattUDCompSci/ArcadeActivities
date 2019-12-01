@@ -65,9 +65,6 @@ class FeedZeke(arcade.Window):
         self.player_sprite.center_y = 150
         self.player_list.append(self.player_sprite)
 
-        self.defender = Defender_Class()
-        self.defender_list.append(self.defender)
-
         self.level_updater()
 
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
@@ -85,12 +82,10 @@ class FeedZeke(arcade.Window):
         self.wall_list.draw()
         self.football_list.draw()
         self.player_list.draw()
+        self.defender_list.draw()
 
         output = f"Score: {self.score}"
         arcade.draw_text(output, 10, 70, arcade.color.WHITE, 20)
-
-        if self.level == 4:
-            self.defender_list.draw()
 
     def on_draw(self):
         arcade.start_render()
@@ -113,9 +108,27 @@ class FeedZeke(arcade.Window):
     def on_update(self, delta_time):
         """ Called every frame of the game (1/GAME_SPEED times per second)"""
         self.player_list.update()
+        self.defender_list.update()
         if self.current_state == GAME_RUNNING:
             self.physics_engine.update()
 
+            for defender in self.defender_list:
+
+                if defender.boundary_right and defender.right > defender.boundary_right and defender.change_x > 0:
+                    defender.change_x *= -1
+                if defender.boundary_left and defender.left < defender.boundary_left and defender.change_x < 0:
+                    defender.change_x *= -1
+                if defender.boundary_top and defender.top > defender.boundary_top and defender.change_y > 0:
+                    defender.change_y *= -1
+                if defender.boundary_bottom and defender.bottom < defender.boundary_bottom and defender.change_y < 0:
+                    defender.change_y *= -1
+
+            defender_hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.defender_list)
+
+            for defender in defender_hit_list:
+                self.score -= 10
+                self.player_sprite.center_x = 64
+                self.player_sprite.center_y = 150
             football_hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.football_list)
 
             for football in football_hit_list:
@@ -153,11 +166,13 @@ class FeedZeke(arcade.Window):
             map_name = f"map_level_{self.level}.tmx"
             platforms_layer_name = 'Platforms'
             footballs_layer_name = 'Football'
+            defenders_layer_name = 'Defender'
 
             my_map = arcade.tilemap.read_tmx(map_name)
 
             self.wall_list = arcade.tilemap.process_layer(my_map, platforms_layer_name, TILE_SCALING)
             self.football_list = arcade.tilemap.process_layer(my_map, footballs_layer_name, FOOTBALL_SCALING)
+            self.defender_list = arcade.tilemap.process_layer(my_map, defenders_layer_name, TILE_SCALING)
             self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
 
             if self.level%3 == 0:
@@ -190,21 +205,6 @@ class Zeke_Player(arcade.Sprite):
         elif self.top > WINDOW_HEIGHT - 1:
             self.top = WINDOW_HEIGHT - 1
 
-class Defender_Class(arcade.Sprite):
-
-    def __init__(self):
-        super().__init__()
-        self.textures.append(ZEKELEFT)
-        self.textures.append(ZEKERIGHT)
-        self.set_texture(0)
-
-    def update(self):
-        if self.level == 4:
-            self.set_texture(ZEKELEFT)
-            self.center_x = 400
-            self.center_y = 150
-        elif self.level == 5:
-            self.set_texture(ZEKERIGHT)
 
 def main():
     window = FeedZeke()
