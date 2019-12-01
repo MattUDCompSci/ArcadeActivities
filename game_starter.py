@@ -6,7 +6,7 @@ WINDOW_WIDTH = 1200
 WINDOW_HEIGHT = 700
 BACKGROUND_COLOR = arcade.color.BLACK
 GAME_TITLE = "Feed Zeke"
-GAME_SPEED = 1/80
+GAME_SPEED = 1/60
 
 ZEKE_SCALING = 0.125
 TILE_SCALING = 0.4
@@ -42,7 +42,7 @@ class FeedZeke(arcade.Window):
         self.current_state = STARTSCREEN
 
         self.instructions = []
-        texture = arcade.load_texture("images/ada.png")
+        texture = arcade.load_texture("images/Start Screen.jpg")
         self.instructions.append(texture)
 
         texture = arcade.load_texture("images/potato.png")
