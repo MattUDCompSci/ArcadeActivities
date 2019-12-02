@@ -39,6 +39,7 @@ class FeedZeke(arcade.Window):
         self.jump = None
         self.tackled = None
         self.defender = None
+        self.defender_direction = None
         self.current_state = STARTSCREEN
 
         self.instructions = []
@@ -59,6 +60,7 @@ class FeedZeke(arcade.Window):
         self.level = 1
         self.jump = 18
         self.tackled = False
+        self.defender_direction = -1
 
         self.player_sprite = Zeke_Player()
         self.player_sprite.center_x = 64
@@ -113,14 +115,17 @@ class FeedZeke(arcade.Window):
             self.physics_engine.update()
 
             for defender in self.defender_list:
-                if self.player_sprite.bottom > defender.top and self.player_sprite.center_x == defender.center_x:
-                    defender.remove_from_sprite_lists()
-                    self.score += 10
+                defender.change_x = self.defender_direction
+                if defender.center_x < 400:
+                    self.defender_direction = 1
+                elif defender.center_x > 800:
+                    self.defender_direction = -1
 
             defender_hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.defender_list)
 
             for defender in defender_hit_list:
                 self.score -= 10
+                self.level_updater()
                 self.player_sprite.center_x = 64
                 self.player_sprite.center_y = 150
 
@@ -148,6 +153,9 @@ class FeedZeke(arcade.Window):
             self.player_sprite.change_x = -MOVESPEED
         elif key == arcade.key.RIGHT or key == arcade.key.D:
             self.player_sprite.change_x = MOVESPEED
+        if key == arcade.key.KEY_7:
+            self.level = 7
+            self.level_updater()
 
 
     def on_key_release(self, key, modifiers):
@@ -170,13 +178,6 @@ class FeedZeke(arcade.Window):
             self.defender_list = arcade.tilemap.process_layer(my_map, defenders_layer_name, TILE_SCALING)
             self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
 
-            for defender in self.defender_list:
-                defender.change_x = -1
-                if self.level == 7:
-                    if defender.center_x > 800:
-                        defender.change_x = -1
-                    elif defender.center_x < 400:
-                        defender.change_x = 1
 
             if self.level%3 == 0:
                 self.background = arcade.load_texture("images/Cowboys_Office.jpeg")
