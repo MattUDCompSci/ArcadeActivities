@@ -4,7 +4,7 @@ import arcade
 WINDOW_WIDTH = 1200
 WINDOW_HEIGHT = 700
 GAME_TITLE = "Feed Zeke"
-GAME_SPEED = 1/60
+GAME_SPEED = 1/120
 
 ZEKE_SCALING = 0.1
 TILE_SCALING = 0.4
@@ -19,6 +19,7 @@ GRAVITY = 1
 STARTSCREEN = 0
 CONTROLSSCREEN = 1
 GAME_RUNNING = 2
+FINAL_SCREEN = 3
 
 class FeedZeke(arcade.Window):
     def __init__(self):
@@ -34,6 +35,7 @@ class FeedZeke(arcade.Window):
         self.defender_list = None
         self.start_button = None
         self.start_button_list = None
+        self.button_list = None
         self.background = None
         self.score = None
         self.level = None
@@ -42,13 +44,17 @@ class FeedZeke(arcade.Window):
         self.defender_direction = None
         self.physics_engine = None
         self.current_state = STARTSCREEN
+        self.flag = None
 
-        # Put the title and instructions screens into a list
+        # Put the title, instructions, and congratulations screens into a list
         self.instructions = []
         texture = arcade.load_texture('images/Start Screen.jpg')
         self.instructions.append(texture)
 
         texture = arcade.load_texture('images/potato.png')
+        self.instructions.append(texture)
+
+        texture = arcade.load_texture('images/ada.png')
         self.instructions.append(texture)
 
     def setup(self):
@@ -60,12 +66,13 @@ class FeedZeke(arcade.Window):
         self.moving_platform_list = arcade.SpriteList()
         self.all_wall_list = arcade.SpriteList()
         self.start_button_list = []
+        self.button_list = []
         self.background = arcade.load_texture('images/Cowboys_Stadium.jpeg')
         self.score = 0
         self.level = 1
         self.jump = 18
         self.defender_direction = -1
-        self.play_game = False
+        self.flag = 1
 
         # Creates the Zeke player Sprite and create his starting position
         self.player_sprite = Zeke_Player()
@@ -73,14 +80,26 @@ class FeedZeke(arcade.Window):
         self.player_sprite.center_y = 150
         self.player_list.append(self.player_sprite)
 
+        # Set's up the Start Button
         self.start_button = StartTextButton(600, 200, self.game_start)
         self.start_button_list.append(self.start_button)
+
+        # Set's up the text button's for the trivia answer's
+
+        self.eagles_button = EaglesTextButton(300, 100, self.check_eagle_answer)
+        self.button_list.append(self.eagles_button)
+
+        self.redskins_button = RedskinsTextButton(600, 100, self.check_redskin_answer)
+        self.button_list.append(self.redskins_button)
+
+        self.giants_button = GiantsTextButton(900, 100, self.check_giant_answer)
+        self.button_list.append(self.giants_button)
 
         # Update the game to go to the first level
         self.level_updater()
 
         # Create the physics engine between Zeke and all platforms
-        self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.all_wall_list, GRAVITY)
+        self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
 
     def draw_instructions_page(self, page_number):
         page_texture = self.instructions[page_number]
@@ -97,6 +116,9 @@ class FeedZeke(arcade.Window):
         self.football_list.draw()
         self.player_list.draw()
         self.defender_list.draw()
+        if self.level%3 == 0:
+            for button in self.button_list:
+              button.draw()
 
         # Displays the score and current level to the screen
         score = f"Score: {self.score}"
@@ -116,6 +138,9 @@ class FeedZeke(arcade.Window):
         elif self.current_state == GAME_RUNNING:
             self.draw_game()
 
+        elif self.current_state == FINAL_SCREEN:
+            self.draw_instructions_page(2)
+
     def game_start(self):
         self.setup()
         self.current_state = GAME_RUNNING
@@ -126,14 +151,11 @@ class FeedZeke(arcade.Window):
             self.current_state = CONTROLSSCREEN
 
         check_mouse_press_for_buttons(self, x, y, self.start_button_list)
-
-        # If the player clicks on the introduction screen start button, move to the first level screen
-        '''elif self.current_state == CONTROLSSCREEN:
-            self.setup()
-            self.current_state = GAME_RUNNING'''
+        check_mouse_press_for_buttons(self, x, y, self.button_list)
 
     def on_mouse_release(self, x: float, y: float, button: int, modifiers: int):
         check_mouse_release_for_buttons(x, y, self.start_button_list)
+        check_mouse_release_for_buttons(x, y, self.button_list)
 
     def on_update(self, delta_time):
         """ Called every frame of the game (1/GAME_SPEED times per second)"""
@@ -146,6 +168,8 @@ class FeedZeke(arcade.Window):
             self.collect_football()
             self.if_fall()
             self.next_level()
+            if self.level == 13:
+                self.current_state = FINAL_SCREEN
 
     # Defines the boundaries a defender can move in for each level
     def defender_movement(self):
@@ -241,18 +265,41 @@ class FeedZeke(arcade.Window):
             self.football_list = arcade.tilemap.process_layer(my_map, footballs_layer_name, FOOTBALL_SCALING)
             self.defender_list = arcade.tilemap.process_layer(my_map, defenders_layer_name, TILE_SCALING)
             self.moving_platform_list = arcade.tilemap.process_layer(my_map, moving_platforms_name, TILE_SCALING)
-
-            # Puts the stationary and moving platforms all into one list
-            for wall in self.wall_list:
-                self.all_wall_list.append(wall)
-            for platform in self.moving_platform_list:
-                self.all_wall_list.append(platform)
+            self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
 
             # Changes the background based on which level the user is currently on
             if self.level%3 == 0:
+                self.flag = 0
                 self.background = arcade.load_texture("images/Cowboys_Office.jpeg")
             else:
                 self.background = arcade.load_texture("images/Cowboys_Stadium.jpeg")
+
+    def check_eagle_answer(self):
+        if self.flag == 0:
+            if self.level == 9:
+                self.score += 50
+                self.flag = 1
+            else:
+                self.score -= 20
+                self.flag = 1
+
+    def check_redskin_answer(self):
+        if self.flag == 0:
+            if self.level == 6:
+                self.score += 50
+                self.flag = 1
+            else:
+                self.score -= 20
+                self.flag = 1
+
+    def check_giant_answer(self):
+        if self.flag == 0:
+            if self.level == 3 or self.level == 12:
+                self.score += 50
+                self.flag = 1
+            else:
+                self.score -= 20
+                self.flag = 1
 
 class Zeke_Player(arcade.Sprite):
 
@@ -282,11 +329,8 @@ class Zeke_Player(arcade.Sprite):
             self.center_x = 64
             self.center_y = 150
 
-        elif self.top > WINDOW_HEIGHT - 1:
-            self.top = WINDOW_HEIGHT - 1
-
+# The Parent Class for all text buttons
 class TextButton:
-    """ Text-based button """
 
     def __init__(self,
                  center_x, center_y,
@@ -317,7 +361,7 @@ class TextButton:
             color = self.face_color
         else:
             color = arcade.color.LIGHT_BLUE
-            
+
         arcade.draw_rectangle_filled(self.center_x, self.center_y, self.width,
                                      self.height, color)
 
@@ -326,27 +370,19 @@ class TextButton:
         else:
             color = self.highlight_color
 
-        # Bottom horizontal
+        # Draw the borders of the text box
         arcade.draw_line(self.center_x - self.width / 2, self.center_y - self.height / 2,
                          self.center_x + self.width / 2, self.center_y - self.height / 2,
                          color, self.button_height)
 
-        # Right vertical
         arcade.draw_line(self.center_x + self.width / 2, self.center_y - self.height / 2,
                          self.center_x + self.width / 2, self.center_y + self.height / 2,
                          color, self.button_height)
 
-        if not self.pressed:
-            color = self.highlight_color
-        else:
-            color = self.shadow_color
-
-        # Top horizontal
         arcade.draw_line(self.center_x - self.width / 2, self.center_y + self.height / 2,
                          self.center_x + self.width / 2, self.center_y + self.height / 2,
                          color, self.button_height)
 
-        # Left vertical
         arcade.draw_line(self.center_x - self.width / 2, self.center_y - self.height / 2,
                          self.center_x - self.width / 2, self.center_y + self.height / 2,
                          color, self.button_height)
@@ -362,6 +398,8 @@ class TextButton:
                          width=self.width, align="center",
                          anchor_x="center", anchor_y="center")
 
+    # Change the boolean value if the button is pressed or released
+
     def on_press(self):
         self.pressed = True
 
@@ -369,8 +407,9 @@ class TextButton:
         self.pressed = False
 
 
+# Function to check whether the users mouse clicks within the text box's boundaries
 def check_mouse_press_for_buttons(self, x, y, button_list):
-    """ Given an x, y, see if we need to register any button clicks. """
+
     for button in button_list:
         if x > button.center_x + button.width / 2:
             continue
@@ -382,19 +421,48 @@ def check_mouse_press_for_buttons(self, x, y, button_list):
             continue
         button.on_press()
 
-
+# Determine what action must be taken after the button is pressed
 def check_mouse_release_for_buttons(_x, _y, button_list):
-    """ If a mouse button has been released, see if we need to process
-        any release events. """
+
     for button in button_list:
         if button.pressed:
             button.on_release()
 
-
+# Create the Start Button on the Title Screen
 class StartTextButton(TextButton):
 
     def __init__(self, center_x, center_y, action_function):
         super().__init__(center_x, center_y, 100, 40, "Start", 18, "Times New Roman")
+        self.action_function = action_function
+
+    def on_release(self):
+        super().on_release()
+        self.action_function()
+
+class EaglesTextButton(TextButton):
+
+    def __init__(self, center_x, center_y, action_function):
+        super().__init__(center_x, center_y, 100, 40, "EAGLES", 18, "Times New Roman")
+        self.action_function = action_function
+
+    def on_release(self):
+        super().on_release()
+        self.action_function()
+
+class RedskinsTextButton(TextButton):
+
+    def __init__(self, center_x, center_y, action_function):
+        super().__init__(center_x, center_y, 100, 40, "REDSKINS", 18, "Times New Roman")
+        self.action_function = action_function
+
+    def on_release(self):
+        super().on_release()
+        self.action_function()
+
+class GiantsTextButton(TextButton):
+
+    def __init__(self, center_x, center_y, action_function):
+        super().__init__(center_x, center_y, 100, 40, "GIANTS", 18, "Times New Roman")
         self.action_function = action_function
 
     def on_release(self):
