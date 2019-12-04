@@ -32,6 +32,8 @@ class FeedZeke(arcade.Window):
         self.all_wall_list = None
         self.football_list = None
         self.defender_list = None
+        self.start_button = None
+        self.start_button_list = None
         self.background = None
         self.score = None
         self.level = None
@@ -57,17 +59,22 @@ class FeedZeke(arcade.Window):
         self.defender_list = arcade.SpriteList()
         self.moving_platform_list = arcade.SpriteList()
         self.all_wall_list = arcade.SpriteList()
+        self.start_button_list = []
         self.background = arcade.load_texture('images/Cowboys_Stadium.jpeg')
         self.score = 0
         self.level = 1
         self.jump = 18
         self.defender_direction = -1
+        self.play_game = False
 
         # Creates the Zeke player Sprite and create his starting position
         self.player_sprite = Zeke_Player()
         self.player_sprite.center_x = 64
         self.player_sprite.center_y = 150
         self.player_list.append(self.player_sprite)
+
+        self.start_button = StartTextButton(600, 200, self.game_start)
+        self.start_button_list.append(self.start_button)
 
         # Update the game to go to the first level
         self.level_updater()
@@ -104,19 +111,29 @@ class FeedZeke(arcade.Window):
 
         elif self.current_state == CONTROLSSCREEN:
             self.draw_instructions_page(1)
+            self.start_button.draw()
 
         elif self.current_state == GAME_RUNNING:
             self.draw_game()
+
+    def game_start(self):
+        self.setup()
+        self.current_state = GAME_RUNNING
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
         # If the player clicks on the title screen, move to the introduction screen
         if self.current_state == STARTSCREEN:
             self.current_state = CONTROLSSCREEN
 
-        # If the player clicks on the introduction screen, move to the first level screen
-        elif self.current_state == CONTROLSSCREEN:
+        check_mouse_press_for_buttons(self, x, y, self.start_button_list)
+
+        # If the player clicks on the introduction screen start button, move to the first level screen
+        '''elif self.current_state == CONTROLSSCREEN:
             self.setup()
-            self.current_state = GAME_RUNNING
+            self.current_state = GAME_RUNNING'''
+
+    def on_mouse_release(self, x: float, y: float, button: int, modifiers: int):
+        check_mouse_release_for_buttons(x, y, self.start_button_list)
 
     def on_update(self, delta_time):
         """ Called every frame of the game (1/GAME_SPEED times per second)"""
@@ -268,6 +285,121 @@ class Zeke_Player(arcade.Sprite):
         elif self.top > WINDOW_HEIGHT - 1:
             self.top = WINDOW_HEIGHT - 1
 
+class TextButton:
+    """ Text-based button """
+
+    def __init__(self,
+                 center_x, center_y,
+                 width, height,
+                 text,
+                 font_size=18,
+                 font_face="Times New Roman",
+                 face_color=arcade.color.WHITE,
+                 highlight_color=arcade.color.DARK_BLUE,
+                 shadow_color=arcade.color.BLUE,
+                 button_height=2):
+        self.center_x = center_x
+        self.center_y = center_y
+        self.width = width
+        self.height = height
+        self.text = text
+        self.font_size = font_size
+        self.font_face = font_face
+        self.pressed = False
+        self.face_color = face_color
+        self.highlight_color = highlight_color
+        self.shadow_color = shadow_color
+        self.button_height = button_height
+
+    def draw(self):
+        """ Draw the button """
+        if not self.pressed:
+            color = self.face_color
+        else:
+            color = arcade.color.LIGHT_BLUE
+            
+        arcade.draw_rectangle_filled(self.center_x, self.center_y, self.width,
+                                     self.height, color)
+
+        if not self.pressed:
+            color = self.shadow_color
+        else:
+            color = self.highlight_color
+
+        # Bottom horizontal
+        arcade.draw_line(self.center_x - self.width / 2, self.center_y - self.height / 2,
+                         self.center_x + self.width / 2, self.center_y - self.height / 2,
+                         color, self.button_height)
+
+        # Right vertical
+        arcade.draw_line(self.center_x + self.width / 2, self.center_y - self.height / 2,
+                         self.center_x + self.width / 2, self.center_y + self.height / 2,
+                         color, self.button_height)
+
+        if not self.pressed:
+            color = self.highlight_color
+        else:
+            color = self.shadow_color
+
+        # Top horizontal
+        arcade.draw_line(self.center_x - self.width / 2, self.center_y + self.height / 2,
+                         self.center_x + self.width / 2, self.center_y + self.height / 2,
+                         color, self.button_height)
+
+        # Left vertical
+        arcade.draw_line(self.center_x - self.width / 2, self.center_y - self.height / 2,
+                         self.center_x - self.width / 2, self.center_y + self.height / 2,
+                         color, self.button_height)
+
+        x = self.center_x
+        y = self.center_y
+        if not self.pressed:
+            x -= self.button_height
+            y += self.button_height
+
+        arcade.draw_text(self.text, x, y,
+                         arcade.color.BLACK, font_size=self.font_size,
+                         width=self.width, align="center",
+                         anchor_x="center", anchor_y="center")
+
+    def on_press(self):
+        self.pressed = True
+
+    def on_release(self):
+        self.pressed = False
+
+
+def check_mouse_press_for_buttons(self, x, y, button_list):
+    """ Given an x, y, see if we need to register any button clicks. """
+    for button in button_list:
+        if x > button.center_x + button.width / 2:
+            continue
+        if x < button.center_x - button.width / 2:
+            continue
+        if y > button.center_y + button.height / 2:
+            continue
+        if y < button.center_y - button.height / 2:
+            continue
+        button.on_press()
+
+
+def check_mouse_release_for_buttons(_x, _y, button_list):
+    """ If a mouse button has been released, see if we need to process
+        any release events. """
+    for button in button_list:
+        if button.pressed:
+            button.on_release()
+
+
+class StartTextButton(TextButton):
+
+    def __init__(self, center_x, center_y, action_function):
+        super().__init__(center_x, center_y, 100, 40, "Start", 18, "Times New Roman")
+        self.action_function = action_function
+
+    def on_release(self):
+        super().on_release()
+        self.action_function()
 
 def main():
     window = FeedZeke()
