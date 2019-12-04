@@ -45,6 +45,7 @@ class FeedZeke(arcade.Window):
         self.physics_engine = None
         self.current_state = STARTSCREEN
         self.flag = None
+        self.play_game = None
 
         # Put the title, instructions, and congratulations screens into a list
         self.instructions = []
@@ -73,6 +74,7 @@ class FeedZeke(arcade.Window):
         self.jump = 18
         self.defender_direction = -1
         self.flag = 1
+        self.play_game = 0
 
         # Creates the Zeke player Sprite and create his starting position
         self.player_sprite = Zeke_Player()
@@ -140,10 +142,6 @@ class FeedZeke(arcade.Window):
 
         elif self.current_state == FINAL_SCREEN:
             self.draw_instructions_page(2)
-
-    def game_start(self):
-        self.setup()
-        self.current_state = GAME_RUNNING
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
         # If the player clicks on the title screen, move to the introduction screen
@@ -273,6 +271,12 @@ class FeedZeke(arcade.Window):
                 self.background = arcade.load_texture("images/Cowboys_Office.jpeg")
             else:
                 self.background = arcade.load_texture("images/Cowboys_Stadium.jpeg")
+
+    def game_start(self):
+        if self.play_game == 0:
+            self.setup()
+            self.current_state = GAME_RUNNING
+            self.play_game = 1
 
     def check_eagle_answer(self):
         if self.flag == 0:
