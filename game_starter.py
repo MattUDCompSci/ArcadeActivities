@@ -51,7 +51,7 @@ class FeedZeke(arcade.Window):
         texture = arcade.load_texture('images/Start Screen.jpg')
         self.instructions.append(texture)
 
-        texture = arcade.load_texture('images/potato.png')
+        texture = arcade.load_texture('images/Introduction Screen.jpg')
         self.instructions.append(texture)
 
         texture = arcade.load_texture('images/ada.png')
@@ -81,7 +81,7 @@ class FeedZeke(arcade.Window):
         self.player_list.append(self.player_sprite)
 
         # Set's up the Start Button
-        self.start_button = StartTextButton(600, 200, self.game_start)
+        self.start_button = StartTextButton(600, 90, self.game_start)
         self.start_button_list.append(self.start_button)
 
         # Set's up the text button's for the trivia answer's
@@ -362,30 +362,10 @@ class TextButton:
         else:
             color = arcade.color.LIGHT_BLUE
 
-        arcade.draw_rectangle_filled(self.center_x, self.center_y, self.width,
-                                     self.height, color)
+        texture = arcade.load_texture("images/Button Texture.png")
 
-        if not self.pressed:
-            color = self.shadow_color
-        else:
-            color = self.highlight_color
-
-        # Draw the borders of the text box
-        arcade.draw_line(self.center_x - self.width / 2, self.center_y - self.height / 2,
-                         self.center_x + self.width / 2, self.center_y - self.height / 2,
-                         color, self.button_height)
-
-        arcade.draw_line(self.center_x + self.width / 2, self.center_y - self.height / 2,
-                         self.center_x + self.width / 2, self.center_y + self.height / 2,
-                         color, self.button_height)
-
-        arcade.draw_line(self.center_x - self.width / 2, self.center_y + self.height / 2,
-                         self.center_x + self.width / 2, self.center_y + self.height / 2,
-                         color, self.button_height)
-
-        arcade.draw_line(self.center_x - self.width / 2, self.center_y - self.height / 2,
-                         self.center_x - self.width / 2, self.center_y + self.height / 2,
-                         color, self.button_height)
+        arcade.draw_texture_rectangle(self.center_x, self.center_y, self.width,
+                                     self.height, texture)
 
         x = self.center_x
         y = self.center_y
