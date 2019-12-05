@@ -83,7 +83,6 @@ class FeedZeke(arcade.Window):
         self.start_button_list.append(self.start_button)
 
         # Set's up the text button's for the trivia answer's
-
         self.eagles_button = EaglesTextButton(300, 100, self.check_eagle_answer)
         self.button_list.append(self.eagles_button)
 
@@ -114,9 +113,38 @@ class FeedZeke(arcade.Window):
         self.football_list.draw()
         self.player_list.draw()
         self.defender_list.draw()
+
+        question = ""
+        answer = ""
+
         if self.level%3 == 0:
             for button in self.button_list:
               button.draw()
+            if self.level == 3:
+                question = "Question 1: Which NFL team did Zeke score his first touchdown against?"
+                arcade.draw_text(question, 200, 600, arcade.color.RED, 24)
+                if self.flag == 1:
+                    answer = "Answer: The Giants!"
+                    arcade.draw_text(answer, 200, 500, arcade.color.RED, 20)
+            if self.level == 6:
+                question = "Question 2: Which NFL team did Zeke get his first win against?"
+                arcade.draw_text(question, 200, 600, arcade.color.RED, 24)
+                if self.flag == 1:
+                    answer = "Answer: The Redskins!"
+                    arcade.draw_text(answer, 200, 500, arcade.color.RED, 20)
+            if self.level == 9:
+                question = "Question 3: Which of these NFL teams has Zeke never lost to?"
+                arcade.draw_text(question, 200, 600, arcade.color.RED, 24)
+                if self.flag == 1:
+                    answer = "Answer: The Eagles!"
+                    arcade.draw_text(answer, 200, 500, arcade.color.RED, 20)
+            if self.level == 12:
+                question = "Question 4: Which NFL team did Zeke suffer his first loss to?"
+                arcade.draw_text(question, 200, 600, arcade.color.RED, 24)
+                if self.flag == 1:
+                    answer = "Answer: The Giants!"
+                    arcade.draw_text(answer, 200, 500, arcade.color.RED, 20)
+
 
         # Displays the score and current level to the screen
         score = f"Score: {self.score}"
@@ -151,6 +179,28 @@ class FeedZeke(arcade.Window):
         check_mouse_release_for_buttons(x, y, self.start_button_list)
         check_mouse_release_for_buttons(x, y, self.button_list)
 
+    def on_key_press(self, key, modifiers):
+        # Makes the Zeke Player Sprite jump up based on the current jump level
+        if key == arcade.key.UP or key == arcade.key.W:
+            if self.physics_engine.can_jump():
+                self.player_sprite.change_y = self.jump
+
+        # Makes the Zeke Player move left and right on the screen
+        elif key == arcade.key.LEFT or key == arcade.key.A:
+            self.player_sprite.change_x = -MOVESPEED
+        elif key == arcade.key.RIGHT or key == arcade.key.D:
+            self.player_sprite.change_x = MOVESPEED
+
+    def on_key_release(self, key, modifiers):
+
+        # When the user stops pushing the up and down or A and D buttons,
+        # Stop changing Zeke's direction from left to right
+        if key == arcade.key.LEFT or key == arcade.key.A:
+            self.player_sprite.change_x = 0
+        elif key == arcade.key.RIGHT or key == arcade.key.D:
+            self.player_sprite.change_x = 0
+
+
     def on_update(self, delta_time):
         """ Called every frame of the game (1/GAME_SPEED times per second)"""
         self.player_list.update()
@@ -178,6 +228,16 @@ class FeedZeke(arcade.Window):
                 if defender.center_x < 200:
                     self.defender_direction = 1
                 elif defender.center_x > 1000:
+                    self.defender_direction = -1
+            elif self.level == 10:
+                if defender.center_x < 200:
+                    self.defender_direction = 1
+                elif defender.center_x > 1000:
+                    self.defender_direction = -1
+            elif self.level == 11:
+                if defender.center_x < 400:
+                    self.defender_direction = 1
+                elif defender.center_x > 900:
                     self.defender_direction = -1
 
     # If Zeke runs into a defender, reset the level, reset Zeke's position,
@@ -217,32 +277,6 @@ class FeedZeke(arcade.Window):
             self.player_sprite.center_x = 64
             self.player_sprite.center_y = self.player_sprite.center_y
 
-    def on_key_press(self, key, modifiers):
-        # Makes the Zeke Player Sprite jump up based on the current jump level
-        if key == arcade.key.UP or key == arcade.key.W:
-            if self.physics_engine.can_jump():
-                self.player_sprite.change_y = self.jump
-
-        # Makes the Zeke Player move left and right on the screen
-        elif key == arcade.key.LEFT or key == arcade.key.A:
-            self.player_sprite.change_x = -MOVESPEED
-        elif key == arcade.key.RIGHT or key == arcade.key.D:
-            self.player_sprite.change_x = MOVESPEED
-
-        # This is a test to show off how Zeke needs to increase his jump by playing through each level
-        if key == arcade.key.KEY_7:
-            self.level = 7
-            self.level_updater()
-
-
-    def on_key_release(self, key, modifiers):
-
-        # When the user stops pushing the up and down or A and D buttons,
-        # Stop changing Zeke's direction from left to right
-        if key == arcade.key.LEFT or key == arcade.key.A:
-            self.player_sprite.change_x = 0
-        elif key == arcade.key.RIGHT or key == arcade.key.D:
-            self.player_sprite.change_x = 0
 
     # Updates each level based on Tiled map files
     def level_updater(self):
