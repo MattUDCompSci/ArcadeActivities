@@ -1,8 +1,8 @@
-# Feed Zeke!
+#Feed Zeke!
 
-Help Zeke travel from level to level to get his jump back.
+##Help Zeke travel from level to level to get his jump back.
 
-About:
+##About
 
 After finally getting his big contract, Zeke is finally willing
 to come back and play for the Dallas Cowboys again! But all that
@@ -23,13 +23,13 @@ the wrong answer to lose 10 points.
 
 Complete all 12 levels to get Zeke his leap back.
 
-Preview:
+##Preview
 
-Installation:
+##Installation
 > pip install -r requirements.txt
->> pip install -r game_starter.py
+>> pip feed_zeke.py
 
-Instructions:
+##Instructions
 
 Use the Left Arrow key or the A key to move Zeke to the left
 
@@ -43,9 +43,26 @@ to begin the game
 Click on the blue trivia text button's during the trivia levels
 to answer the questions
 
-Authors:
+##Authors
 
 Name - Matthew Weis
 E-Mail - mattweis@udel.edu
 
-Acknowledgments:
+##Acknowledgments
+
+- Arcade Website - 2D platforming tutorial, Text button tutorial [2D Platformer](http://arcade.academy/examples/platform_tutorial/index.html), [Text Button's](http://arcade.academy/examples/gui_text_button.html)
+- Cafepress - Introduction Screen WASD keys image - [Cafepress](https://www.cafepress.com/+wasd_keys_gaming_mousepad,667717854)
+- CrowdControl - Trivia Level ground texture - [CrowdControl](https://www.crowdcontroldirect.com/Dark-Blue-Carpet-Runner-p/ccdcrp10.htm)
+- Hellas Construction - Cowboys Stadium background - [PRnewswire](https://www.prnewswire.com/news-releases/dallas-cowboys-make-hellas-construction-official-turf-provider-300565373.html)
+- Janniwet Wangkiri - Football Turf Ground texture - [123rf](https://www.123rf.com/photo_85358108_natural-background-of-green-grass-small-grass-football-ground.html)
+- Jon Machota - Ezekiel Elliott title screen image - [Dallas Morning News](https://www.dallasnews.com/sports/cowboys/2017/01/31/how-ezekiel-elliott-s-spoon-to-mouth-gesture-turned-into-a-cowboys-feed-zeke-phenomenon/)
+- NicePNG - Introduction Screen Arrow Keys image - [NicePNG](https://www.nicepng.com/ourpic/u2w7q8u2a9u2r5a9_l1-computer-arrows-keys-png/)
+- Peinado - Trivia Level background - [Peinado Construction](https://www.fapeinado.com/team-project-history/dallas-cowboys-merchandising/)
+- Pinterest - Title Screen background and Floating Platforms texture - [Background](https://www.pinterest.com/pin/262968065725366167/), [Platforms](https://www.pinterest.com/pin/658510776736986106/)
+- Sam Robinson - Fletcher Cox/defender sprite image - [ProFootballRumors](https://www.profootballrumors.com/fletcher-cox)
+- Sporturf - Introduction Screen background - [Sporturf](https://sporturf.com/why-should-you-choose-synthetic-turf-for-your-football-field/)
+- Textcraft - Title Screen "Feed Zeke!" title and "Click Anywhere to Begin" instructions - [Textcraft](https://textcraft.net/)
+- Todd Dewey - Ezekiel Elliott sprite image - .[Review Journal](https://www.reviewjournal.com/sports/betting/ezekiel-elliott-moves-line-but-chiefs-still-should-beat-cowboys/).
+- University of Florida - 8-bit Football sprite - [Giphy](https://giphy.com/gifs/UF-florida-university-of-cstIPkOAUOxC4eTa1a)
+
+
