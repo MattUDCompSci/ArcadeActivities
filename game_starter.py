@@ -29,8 +29,6 @@ class FeedZeke(arcade.Window):
         self.center_y = WINDOW_HEIGHT/2
         self.player_list = None
         self.wall_list = None
-        self.moving_platform_list = None
-        self.all_wall_list = None
         self.football_list = None
         self.defender_list = None
         self.start_button = None
@@ -64,8 +62,6 @@ class FeedZeke(arcade.Window):
         self.wall_list = arcade.SpriteList()
         self.football_list = arcade.SpriteList()
         self.defender_list = arcade.SpriteList()
-        self.moving_platform_list = arcade.SpriteList()
-        self.all_wall_list = arcade.SpriteList()
         self.start_button_list = []
         self.button_list = []
         self.background = arcade.load_texture('images/Cowboys_Stadium.jpeg')
@@ -174,9 +170,14 @@ class FeedZeke(arcade.Window):
         for defender in self.defender_list:
             defender.change_x = self.defender_direction
             if self.level == 7:
-                if defender.center_x < 400:
+                if defender.center_x < 300:
                     self.defender_direction = 1
-                elif defender.center_x > 800:
+                elif defender.center_x > 1000:
+                    self.defender_direction = -1
+            elif self.level == 8:
+                if defender.center_x < 200:
+                    self.defender_direction = 1
+                elif defender.center_x > 1000:
                     self.defender_direction = -1
 
     # If Zeke runs into a defender, reset the level, reset Zeke's position,
@@ -253,7 +254,6 @@ class FeedZeke(arcade.Window):
             platforms_layer_name = 'Platforms'
             footballs_layer_name = 'Football'
             defenders_layer_name = 'Defender'
-            moving_platforms_name = 'Moving Platforms'
 
             # Sets up the name of the map file that should be set up
             my_map = arcade.tilemap.read_tmx(map_name)
@@ -262,7 +262,6 @@ class FeedZeke(arcade.Window):
             self.wall_list = arcade.tilemap.process_layer(my_map, platforms_layer_name, TILE_SCALING)
             self.football_list = arcade.tilemap.process_layer(my_map, footballs_layer_name, FOOTBALL_SCALING)
             self.defender_list = arcade.tilemap.process_layer(my_map, defenders_layer_name, TILE_SCALING)
-            self.moving_platform_list = arcade.tilemap.process_layer(my_map, moving_platforms_name, TILE_SCALING)
             self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
 
             # Changes the background based on which level the user is currently on
