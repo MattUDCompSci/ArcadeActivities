@@ -43,7 +43,7 @@ Click on the blue Start text button on the Instructions screen
 to begin the game
 
 Click on the blue trivia text button's during the trivia levels
-to answer the questions
+to answer the questions.
 
 ##Authors
 
