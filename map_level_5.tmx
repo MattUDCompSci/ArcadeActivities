@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.0" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="100" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="2" nextobjectid="1">
+<map version="1.2" tiledversion="1.3.0" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="100" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="3" nextobjectid="1">
  <tileset firstgid="1" name="Turf" tilewidth="450" tileheight="300" tilecount="1" columns="0">
   <grid orientation="orthogonal" width="1" height="1"/>
   <tile id="0">
@@ -20,7 +20,12 @@
  </tileset>
  <layer id="1" name="Platforms" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eAHt11EOwBAQBUDa+9+5eoUVycNIfJK3syK0ZhAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBDYQ+DdI6aUBAiEC7hLwht0WDzn7bCGKocAAQIECBAgQIAAgViBJzaZYAQIECBAgAABArcJeJve1nH1EiBAgAABAgQIECBQEVjxd1qxZ6U2awgQIECAAAECBAgQIECAAAECBAjMCvSxwT+NDIEPtnUAFA==
+   eAHt10EKACAIBMDq/4+uXtBpIWWEToHoeNExBAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQqCuw6paucgIECBAgQIAAgWYCdtNmA9UOAQIECBAgQIAAAQIRgcTtlMgZaV5SAgQIECBAgAABAgQIECBAgAABAg+Bef7vE38IbI9rAAs=
+  </data>
+ </layer>
+ <layer id="2" name="Football" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eAHt17EJAAAIAzDB/3/2g04uSlyFgnFqlSFAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIENgQ6I0QGQQIECBAgAABAgQIvBPQFd691EEECBAgQIAAAQIECBAgEAT04IBjRYAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQKnBAbDVgAK
   </data>
  </layer>
 </map>

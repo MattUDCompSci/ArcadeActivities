@@ -25,9 +25,11 @@ Complete all 12 levels to get Zeke his leap back.
 
 ##Preview
 
+Click [Here](https://www.youtube.com/watch?v=_m4HRD6yWhU&feature=youtu.be) to see a preview of the game
+
 ##Installation
 > pip install -r requirements.txt
->> pip feed_zeke.py
+> pip feed_zeke.py
 
 ##Instructions
 
@@ -46,6 +48,7 @@ to answer the questions
 ##Authors
 
 Name - Matthew Weis
+
 E-Mail - mattweis@udel.edu
 
 ##Acknowledgments

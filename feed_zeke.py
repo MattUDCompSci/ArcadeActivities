@@ -23,7 +23,7 @@ FINAL_SCREEN = 3
 
 class FeedZeke(arcade.Window):
     def __init__(self):
-        """ Initialize variables """
+        # Initialize variables
         super().__init__(WINDOW_WIDTH, WINDOW_HEIGHT, GAME_TITLE)
         self.center_x = WINDOW_WIDTH/2
         self.center_y = WINDOW_HEIGHT/2
@@ -57,7 +57,7 @@ class FeedZeke(arcade.Window):
         self.instructions.append(texture)
 
     def setup(self):
-        """ Setup the game (or reset the game) """
+        #Setup the game
         self.player_list = arcade.SpriteList()
         self.wall_list = arcade.SpriteList()
         self.football_list = arcade.SpriteList()
@@ -98,25 +98,28 @@ class FeedZeke(arcade.Window):
         # Create the physics engine between Zeke and all platforms
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
 
+    # Goes through the list of instruction pages and draws the one based on the list index (int page_number) is
     def draw_instructions_page(self, page_number):
         page_texture = self.instructions[page_number]
         arcade.draw_texture_rectangle(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2,
                                       page_texture.width,
                                       page_texture.height, page_texture, 0)
 
+    # Called when it is time to draw the Levels
     def draw_game(self):
-        """ Called when it is time to draw the world """
+
+        # Draw the Cowboy's Stadium background
         arcade.draw_texture_rectangle(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2, WINDOW_WIDTH, WINDOW_HEIGHT,
                                       self.background)
+
         # Draw's all of the sprites
         self.wall_list.draw()
         self.football_list.draw()
         self.player_list.draw()
         self.defender_list.draw()
 
-        question = ""
-        answer = ""
-
+        # Draw's the Questions when it is a Trivia Level
+        # Draw's the Answers when the User picks an answer (if they choose to do so)
         if self.level%3 == 0:
             for button in self.button_list:
               button.draw()
@@ -152,6 +155,7 @@ class FeedZeke(arcade.Window):
         level = f"Level: {self.level}"
         arcade.draw_text(level, 10, 660, arcade.color.WHITE, 20)
 
+    # Draws the instruction screens and the world based on self.current state integer
     def on_draw(self):
         arcade.start_render()
         if self.current_state == STARTSCREEN:
@@ -172,10 +176,12 @@ class FeedZeke(arcade.Window):
         if self.current_state == STARTSCREEN:
             self.current_state = CONTROLSSCREEN
 
+        # Run the check_mouse_press_for_buttons() function if one of the drawn button's is pressed
         check_mouse_press_for_buttons(self, x, y, self.start_button_list)
         check_mouse_press_for_buttons(self, x, y, self.button_list)
 
     def on_mouse_release(self, x: float, y: float, button: int, modifiers: int):
+        # Run the check_mouse_release_for_buttons() function if one of the drawn button's is released
         check_mouse_release_for_buttons(x, y, self.start_button_list)
         check_mouse_release_for_buttons(x, y, self.button_list)
 
@@ -307,12 +313,16 @@ class FeedZeke(arcade.Window):
             else:
                 self.background = arcade.load_texture("images/Cowboys_Stadium.jpeg")
 
+    # Function for the Start button, sets up the world if the self.play_game flag variable is 0
     def game_start(self):
         if self.play_game == 0:
             self.setup()
             self.current_state = GAME_RUNNING
             self.play_game = 1
 
+    # Function for the EAGLES answer button, uses a flag variable (self.flag) to determine
+    # if it is the third level and if a button has not already been pressed. Adds and subtracts
+    # points based on the current level.
     def check_eagle_answer(self):
         if self.flag == 0:
             if self.level == 9:
@@ -322,6 +332,9 @@ class FeedZeke(arcade.Window):
                 self.score -= 20
                 self.flag = 1
 
+    # Function for the REDSKINS answer button, uses a flag variable (self.flag) to determine
+    # if it is the third level and if a button has not already been pressed. Adds and subtracts
+    # points based on the current level.
     def check_redskin_answer(self):
         if self.flag == 0:
             if self.level == 6:
@@ -331,6 +344,9 @@ class FeedZeke(arcade.Window):
                 self.score -= 20
                 self.flag = 1
 
+    # Function for the GIANTS answer button, uses a flag variable (self.flag) to determine
+    # if it is the third level and if a button has not already been pressed. Adds and subtracts
+    # points based on the current level.
     def check_giant_answer(self):
         if self.flag == 0:
             if self.level == 3 or self.level == 12:
@@ -340,6 +356,7 @@ class FeedZeke(arcade.Window):
                 self.score -= 20
                 self.flag = 1
 
+# Class that defines the Zeke player sprite
 class Zeke_Player(arcade.Sprite):
 
     def __init__(self):
@@ -371,6 +388,7 @@ class Zeke_Player(arcade.Sprite):
 # The Parent Class for all text buttons
 class TextButton:
 
+    #Initializes variables
     def __init__(self,
                  center_x, center_y,
                  width, height,
@@ -395,17 +413,13 @@ class TextButton:
         self.button_height = button_height
 
     def draw(self):
-        """ Draw the button """
-        if not self.pressed:
-            color = self.face_color
-        else:
-            color = arcade.color.LIGHT_BLUE
-
+        # Draw the button
         texture = arcade.load_texture("images/Button Texture.png")
 
         arcade.draw_texture_rectangle(self.center_x, self.center_y, self.width,
                                      self.height, texture)
 
+        # Draw the text on the button in the middle of the drawn button
         x = self.center_x
         y = self.center_y
         if not self.pressed:
@@ -418,7 +432,6 @@ class TextButton:
                          anchor_x="center", anchor_y="center")
 
     # Change the boolean value if the button is pressed or released
-
     def on_press(self):
         self.pressed = True
 
@@ -447,7 +460,7 @@ def check_mouse_release_for_buttons(_x, _y, button_list):
         if button.pressed:
             button.on_release()
 
-# Create the Start Button on the Title Screen
+# Subclass to create the Start Button on the Title Screen
 class StartTextButton(TextButton):
 
     def __init__(self, center_x, center_y, action_function):
@@ -458,41 +471,48 @@ class StartTextButton(TextButton):
         super().on_release()
         self.action_function()
 
+# Subclass to create the EAGLES Button on the Trivia Levels
 class EaglesTextButton(TextButton):
 
     def __init__(self, center_x, center_y, action_function):
         super().__init__(center_x, center_y, 100, 40, "EAGLES", 18, "Times New Roman")
         self.action_function = action_function
 
+    # When the button is released, run the action_function in the class that is calling it
     def on_release(self):
         super().on_release()
         self.action_function()
 
+# Subclass to create the REDSKINS Button on the Trivia Levels
 class RedskinsTextButton(TextButton):
 
     def __init__(self, center_x, center_y, action_function):
         super().__init__(center_x, center_y, 100, 40, "REDSKINS", 18, "Times New Roman")
         self.action_function = action_function
 
+    # When the button is released, run the action_function in the class that is calling it
     def on_release(self):
         super().on_release()
         self.action_function()
 
+# Subclass to create the GIANTS Button on the Trivia Levels
 class GiantsTextButton(TextButton):
 
     def __init__(self, center_x, center_y, action_function):
         super().__init__(center_x, center_y, 100, 40, "GIANTS", 18, "Times New Roman")
         self.action_function = action_function
 
+    # When the button is released, run the action_function in the class that is calling it
     def on_release(self):
         super().on_release()
         self.action_function()
 
+# Run's the FeedZeke() Class
 def main():
     window = FeedZeke()
     window.setup()
     arcade.run()
 
-
+# Run the main() function
 if __name__ == '__main__':
     main()
