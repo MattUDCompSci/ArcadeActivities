@@ -1,8 +1,8 @@
-#Feed Zeke!
+# Feed Zeke!
 
-##Help Zeke travel from level to level to get his jump back.
+## Help Zeke travel from level to level to get his jump back.
 
-##About
+## About
 
 After finally getting his big contract, Zeke is finally willing
 to come back and play for the Dallas Cowboys again! But all that
@@ -23,15 +23,15 @@ the wrong answer to lose 10 points.
 
 Complete all 12 levels to get Zeke his leap back.
 
-##Preview
+## Preview
 
 Click [Here](https://www.youtube.com/watch?v=_m4HRD6yWhU&feature=youtu.be) to see a preview of the game
 
-##Installation
+## Installation
 > pip install -r requirements.txt
 > pip feed_zeke.py
 
-##Instructions
+## Instructions
 
 Use the Left Arrow key or the A key to move Zeke to the left
 
@@ -45,13 +45,13 @@ to begin the game
 Click on the blue trivia text button's during the trivia levels
 to answer the questions.
 
-##Authors
+## Authors
 
 Name - Matthew Weis
 
 E-Mail - mattweis@udel.edu
 
-##Acknowledgments
+## Acknowledgments
 
 - Arcade Website - 2D platforming tutorial, Text button tutorial [2D Platformer](http://arcade.academy/examples/platform_tutorial/index.html), [Text Button's](http://arcade.academy/examples/gui_text_button.html)
 - Cafepress - Introduction Screen WASD keys image - [Cafepress](https://www.cafepress.com/+wasd_keys_gaming_mousepad,667717854)
