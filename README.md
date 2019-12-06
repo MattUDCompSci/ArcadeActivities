@@ -1,6 +1,6 @@
 # Feed Zeke!
 
-## Help Zeke travel from level to level to get his jump back.
+Help Zeke travel from level to level to get his jump back.
 
 ## About
 
