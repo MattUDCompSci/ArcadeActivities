@@ -136,7 +136,7 @@ class FeedZeke(arcade.Window):
                     answer = "Answer: The Redskins!"
                     arcade.draw_text(answer, 200, 500, arcade.color.RED, 20)
             if self.level == 9:
-                question = "Question 3: Which of these NFL teams has Zeke never lost to?"
+                question = "Question 3: Which of these NFL teams did Zeke beat five times before losing?"
                 arcade.draw_text(question, 200, 600, arcade.color.RED, 24)
                 if self.flag == 1:
                     answer = "Answer: The Eagles!"
